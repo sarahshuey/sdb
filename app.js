@@ -13,11 +13,49 @@ app.use(bodyParser.urlencoded({
 }))
 
 app.get('/', function(req, res) {
-    res.render("index");
+  res.render("index");
+})
+app.get('/users', function(req, res) {
+  models.User.findAll()
+    .then(function(users) {
+      res.render('users', {
+        users: users
+      });
+    })
+})
+app.get('/add', function(req, res) {
+  res.render("add");
+})
+app.post('/add', function(req, res) {
+  let name = req.body.name
+  let email = req.body.email
+  let bio = req.body.bio
+  const newUser = models.User.build({
+    name: name,
+    email: email,
+    bio: bio
+  })
+  newUser.save()
+    .then(function() {
+      res.redirect('/users')
+    })
+})
+
+app.post('/delete/:id', function(req, res) {
+  let id = req.params.id
+  models.User.destroy({
+      where: {
+        id: id
+      }
+    })
+    .then(function() {
+      res.redirect('/users')
+    })
+
 })
 
 app.listen(3000, function() {
-    console.log('Express running on http://localhost:3000/.')
+  console.log('Express running on http://localhost:3000/.')
 });
 
 process.on('SIGINT', function() {
@@ -25,14 +63,12 @@ process.on('SIGINT', function() {
   const index = require('./models/index')
   index.sequelize.close()
 
- // give it a second
+  // give it a second
   setTimeout(function() {
     console.log('process exit');
     process.exit(0);
   }, 1000)
 });
-
-
 
 
 
