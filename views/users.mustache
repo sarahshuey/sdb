@@ -8,7 +8,7 @@
     <h1>Users</h1>
     <a href="/add">Add a User</a>
     {{#users}}
-    <p> Name: {{name}} </p>
+    <p> Name: <a href="/update/{{id}}">{{name}}</a></p>
     <p> Email: {{dataValues.email}} </p>
     <p> Bio: {{dataValues.bio}} </p>
     <p> Id: {{dataValues.id}} </p>

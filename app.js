@@ -26,6 +26,33 @@ app.get('/users', function(req, res) {
 app.get('/add', function(req, res) {
   res.render("add");
 })
+app.get('/update/:id', function(req, res) {
+let id = req.params.id
+models.User.findOne({
+  where:{id:id}
+})
+.then(function(users) {
+  res.render('update', {users: users})
+})
+})
+
+app.post('/update/:id',function (req, res) {
+  let id = req.params.id
+  let name = req.body.name
+  let email = req.body.email
+  let bio = req.body.bio
+  const updateUser = models.User.update({
+    name: name,
+    email: email,
+    bio: bio
+  },{
+    where:{id:id}
+  })
+    .then(function() {
+      res.redirect('/users')
+    })
+  })
+
 app.post('/add', function(req, res) {
   let name = req.body.name
   let email = req.body.email
